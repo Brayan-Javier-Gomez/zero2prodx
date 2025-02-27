@@ -15,6 +15,7 @@ actix-web = "4"
 config = "0.11"
 chrono = "0.4.15"
 tracing-log = "0.1"
+serde-aux = "3"
 tracing-bunyan-formatter = "0.3"
 tracing = { version = "0.1", features = ["log"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
