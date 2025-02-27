@@ -1,11 +1,11 @@
 #! spec.yaml
-name: zero2prodX
+name: zero2prodx
 # Consulta https://www.digitalocean.com/docs/app-platform/#regional-availability
 # https://www.digitalocean.com/docs/platform/availability-matrix/
 # Deben especificarse en minúsculas.
 region: nyc1
 services:
-  - name: zero2prodX
+  - name: zero2prodx
     # Relativo a la raíz del repositorio
     dockerfile_path: Dockerfile
     source_dir: .
@@ -24,11 +24,22 @@ services:
       http_path: /health_check
       # Puerto en el que la aplicación escuchará solicitudes entrantes
       # Debe coincidir con el especificado en configuration/production.yaml
-      http_port: 8000
+    http_port: 8000
     # Para entornos de producción usaríamos al menos dos instancias,
     # pero tratemos de mantener los costos bajo control por ahora...
     instance_count: 1
     instance_size_slug: basic-xxs
-# Todas las solicitudes entrantes deben dirigirse a nuestra app
-routes:
-  - path: /
+    # Todas las solicitudes entrantes deben dirigirse a nuestra app
+    routes:
+      - path: /
+
+databases:
+  # PG = Postgres
+  - engine: PG
+    # Database name
+    name: newsletter
+    # Again, let's keep the bill lean
+    num_nodes: 1
+    size: db-s-dev-database
+    # Postgres version - using the latest here
+    version: "16"
