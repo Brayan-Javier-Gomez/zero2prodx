@@ -51,3 +51,6 @@ databases:
     size: db-s-dev-database
     # Postgres version - using the latest here
     version: "16"
+    cluster_name: newsletter-zero2prodx
+    db_name: newsletter
+    db_user: zero2prodx

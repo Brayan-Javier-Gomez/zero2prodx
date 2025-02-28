@@ -17,6 +17,8 @@ chrono = "0.4.15"
 tracing-log = "0.1"
 serde-aux = "3"
 tracing-bunyan-formatter = "0.3"
+unicode-segmentation = "1.12.0"
+validator = "0.14"
 tracing = { version = "0.1", features = ["log"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 serde = { version = "1.0", features = ["derive"] }
@@ -40,3 +42,7 @@ features = [
 
 [dev-dependencies]
 reqwest = "0.11"
+claim = "0.5"
+fake = "~2.3"
+quickcheck = "0.9.2"
+quickcheck_macros = "0.9.1"
