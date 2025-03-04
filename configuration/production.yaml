@@ -3,3 +3,8 @@ application:
   host: 0.0.0.0
 database:
   require_ssl: true
+email_client:
+  # Valor obtenido de la documentación de la API de Postmark
+  base_url: "https://api.postmarkapp.com"
+  # Usa el correo autorizado en Postmark
+  sender_email: "something@gmail.com"
