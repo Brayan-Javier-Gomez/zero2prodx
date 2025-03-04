@@ -41,6 +41,8 @@ impl EmailClient {
             autorization_token,
         }
     }
+
+    //funcion para enviar un correo
     pub async fn send_email(
         &self,
         recipient: SubscriberEmail,

@@ -1,6 +1,3 @@
--- Add migration script here
-
-
 -- Crear tabla de suscripciones
 CREATE TABLE subscriptions(
     id UUID NOT NULL,
