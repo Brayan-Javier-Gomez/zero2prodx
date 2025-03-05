@@ -8,7 +8,7 @@ database:
   password: "password"
   database_name: "newsletter"
 email_client:
-  base_url: "https://api.mailgun.net/v3"
+  base_url: "localhost"
   sender_email: "test@test.com"
-  authorization_token: "my-secret-token"
+  authorization_token : "Bearer token"
   timeout_milliseconds: 10000

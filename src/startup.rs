@@ -8,6 +8,7 @@ use crate::configuration::{DatabaseSettings, Settings};
 use crate::routes::health_check::health_check;
 use crate::routes::subscriptions::subscribe;
 use crate::email_client::EmailClient;
+use crate::routes::subscriptions_confirm::confirm;
 
 pub struct Application {
     port: u16,
@@ -67,6 +68,7 @@ pub fn run(listener: TcpListener, db_pool:PgPool, email_client: EmailClient) -> 
             .wrap(Logger::default())
             .route("/health_check", web::get().to(health_check))
             .route("/subscriptions", web::post().to(subscribe))
+            .route("/subscriptions/confirm", web::get().to(confirm))
             .app_data(db_pool.clone())
             .app_data(email_client.clone())
             
