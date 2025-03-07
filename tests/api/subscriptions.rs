@@ -23,7 +23,6 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
     assert_eq!(200, response.status().as_u16());
 }
 
-
 #[tokio::test]
 async fn subscribe_persists_the_new_subscriber() {
     // Arrange
@@ -105,23 +104,11 @@ async fn subscribe_sends_a_confirmation_email_with_a_link() {
 
     // Act
     app.post_subscriptions(body.into()).await;
+
+    // Assert
     let email_request = &app.email_server.received_requests().await.unwrap()[0];
+    let confirmation_links = app.get_confirmation_links(&email_request);
 
-    let body: serde_json::Value = serde_json::from_slice(&email_request.body).unwrap();
-
-    // Extraer el enlace de uno de los campos de la solicitud
-    let get_link = |s: &str| {
-        let links: Vec<_> = linkify::LinkFinder::new()
-            .links(s)
-            .filter(|l| *l.kind() == linkify::LinkKind::Url)
-            .collect();
-        assert_eq!(links.len(), 1);
-        links[0].as_str().to_owned()
-    };
-
-    let html_link = get_link(&body["HtmlBody"].as_str().unwrap());
-    let text_link = get_link(&body["TextBody"].as_str().unwrap());
-
-    // Ambos enlaces deben ser idénticos
-    assert_eq!(html_link, text_link);
+    // Los dos enlaces deben ser idénticos.
+    assert_eq!(confirmation_links.html, confirmation_links.plain_text);
 }
