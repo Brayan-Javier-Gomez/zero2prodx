@@ -1,7 +1,6 @@
 //! src/email_client.rs
 
 use core::time;
-
 use crate::domain::subscriber_email::SubscriberEmail;
 use reqwest::Client;
 use secrecy::{ExposeSecret, Secret};
@@ -76,12 +75,12 @@ impl EmailClient {
 #[cfg(test)]
 mod tests {
     use crate::domain::subscriber_email::SubscriberEmail;
-    use crate::email_client::{self, EmailClient};
+    use crate::email_client::EmailClient;
     use fake::faker::internet::en::SafeEmail;
     use fake::faker::lorem::en::{Paragraph, Sentence};
     use fake::{Fake, Faker};
     use secrecy::Secret;
-    use wiremock::matchers::{any, header, header_exists, method, path};
+    use wiremock::matchers::any;
     use wiremock::{Mock, MockServer, ResponseTemplate, Request};
     use claim::assert_ok;
     use claim::assert_err;
