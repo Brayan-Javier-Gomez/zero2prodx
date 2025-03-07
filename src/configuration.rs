@@ -6,23 +6,33 @@ use crate::domain::subscriber_email::SubscriberEmail;
 
 //--- Inicio de Modelos
 #[derive(serde::Deserialize, Clone)]
+
+//-- Exportador de configuracion general --
 pub struct Settings {
     pub database: DatabaseSettings,
     pub application: ApplicationSettings,
     pub email_client: EmailClientSettings
 }
+
+
+//-- Configuración de rutas del servidor --
 #[derive(serde::Deserialize, Clone)]
 pub struct ApplicationSettings {
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub port: u16,
     pub host: String,
+    pub base_url: String,
 }
 
+
+//-- Configuración de ambientes --
 pub enum Environment {
     Local,
     Production,
 }
 
+
+//-- Configuración de base de datos --
 #[derive(serde::Deserialize, Clone)]
 pub struct DatabaseSettings {
     pub username: String,
@@ -34,6 +44,8 @@ pub struct DatabaseSettings {
     pub require_ssl: bool,
 }
 
+
+//-- Configuración de cliente de correo --
 #[derive(serde::Deserialize, Clone)]
 pub struct EmailClientSettings {
     pub base_url: String,
@@ -42,7 +54,6 @@ pub struct EmailClientSettings {
     pub timeout_milliseconds: u64,
 }
 
-//--- Fin de Modelos
 
 
 //--Inicio Implementaciones
@@ -89,7 +100,6 @@ impl DatabaseSettings {
             .ssl_mode(ssl_mode)
     }
 }
-
 
 impl EmailClientSettings {
     pub fn sender(&self) -> Result<SubscriberEmail, String> {
