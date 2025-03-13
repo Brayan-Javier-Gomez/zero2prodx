@@ -12,18 +12,13 @@ use serde::{Deserialize, Serialize};
 use sqlx::{PgPool, Transaction,Postgres};
 use unicode_segmentation::UnicodeSegmentation;
 use uuid::Uuid;#[derive(Serialize, Deserialize)]
+
+
 pub struct FormData {
     pub email: String,
     pub name: String,
 }
-
-pub fn parse_subscriber(form: FormData) -> Result<NewSubscriber, String> {
-    let name = SubscriberName::parse(form.name)?;
-    let email = SubscriberEmail::parse(form.email)?;
-    Ok(NewSubscriber { email, name })
-}
-
-//Implementación del manejador de errores
+//Inicio implementación del manejador de errores
 pub struct StoreTokenError(sqlx::Error);
 
 impl std::fmt::Display for StoreTokenError {
@@ -44,6 +39,7 @@ impl std::fmt::Debug for StoreTokenError {
     }
 }
 
+// Implementación principal de suscripción
 #[tracing::instrument(
     name = "Adding a new subscriber",
     skip(form, pool, email_client, base_url),
@@ -103,6 +99,7 @@ pub async fn subscribe(
     HttpResponse::Ok().finish()
 }
 
+// Almacenamiento del token temporal para confirmación
 #[tracing::instrument(
     name = "Store subscription token in the database",
     skip(subscription_token, transaction)
@@ -153,23 +150,11 @@ pub async fn insert_subscriber(
     Ok(subscriber_id)
 }
 
-pub fn is_valid_name(s: &str) -> bool {
-    let is_empty_or_whitespace = s.trim().is_empty();
-
-    let is_too_long = s.graphemes(true).count() > 256;
-
-    let forbidden_characters = ['/', '(', ')', '"', '<', '>', '\\', '{', '}'];
-
-    let contains_forbidden_characters = s.chars().any(|g| forbidden_characters.contains(&g));
-
-    !(is_empty_or_whitespace || is_too_long || contains_forbidden_characters)
-}
-
+// Envio de correo de confirmación
 #[tracing::instrument(
     name = "Send a confirmation email to a new subscriber",
     skip(email_client, new_subscriber)
 )]
-
 pub async fn send_confirmation_email(
     email_client: &EmailClient,
     new_subscriber: NewSubscriber,
@@ -196,6 +181,8 @@ pub async fn send_confirmation_email(
         .await
 }
 
+
+// Generador de token de suscricion
 fn generate_subscription_token() -> String {
     let mut rng = thread_rng();
     std::iter::repeat_with(|| rng.sample(Alphanumeric))
@@ -204,6 +191,7 @@ fn generate_subscription_token() -> String {
         .collect()
 }
 
+// Funcion para imprimir los errores del handler
 fn error_chain_fmt(
     e: &impl std::error::Error,
     f: &mut std::fmt::Formatter<'_>,
@@ -215,4 +203,24 @@ fn error_chain_fmt(
         current = cause.source();
     }
     Ok(())
+}
+
+// Validador de nombres del formulario
+pub fn is_valid_name(s: &str) -> bool {
+    let is_empty_or_whitespace = s.trim().is_empty();
+
+    let is_too_long = s.graphemes(true).count() > 256;
+
+    let forbidden_characters = ['/', '(', ')', '"', '<', '>', '\\', '{', '}'];
+
+    let contains_forbidden_characters = s.chars().any(|g| forbidden_characters.contains(&g));
+
+    !(is_empty_or_whitespace || is_too_long || contains_forbidden_characters)
+}
+
+// Retorna los valores en el formato de newSubscriber
+pub fn parse_subscriber(form: FormData) -> Result<NewSubscriber, String> {
+    let name = SubscriberName::parse(form.name)?;
+    let email = SubscriberEmail::parse(form.email)?;
+    Ok(NewSubscriber { email, name })
 }
