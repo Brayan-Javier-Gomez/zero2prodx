@@ -5,6 +5,8 @@ use uuid::Uuid;
 pub struct Parameters {
     subscription_token: String,
 }
+
+
 #[tracing::instrument(name = "Confirm a pending subscriber", skip(parameters, pool))]
 pub async fn confirm(parameters: web::Query<Parameters>, pool: web::Data<PgPool>) -> HttpResponse {
     let id = match get_subscriber_id_from_token(&pool, &parameters.subscription_token).await {
@@ -22,6 +24,8 @@ pub async fn confirm(parameters: web::Query<Parameters>, pool: web::Data<PgPool>
         }
     }
 }
+
+
 #[tracing::instrument(name = "Mark subscriber as confirmed", skip(subscriber_id, pool))]
 pub async fn confirm_subscriber(pool: &PgPool, subscriber_id: Uuid) -> Result<(), sqlx::Error> {
     sqlx::query!(
@@ -36,6 +40,8 @@ pub async fn confirm_subscriber(pool: &PgPool, subscriber_id: Uuid) -> Result<()
     })?;
     Ok(())
 }
+
+
 #[tracing::instrument(name = "Get subscriber_id from token", skip(subscription_token, pool))]
 pub async fn get_subscriber_id_from_token(
     pool: &PgPool,
