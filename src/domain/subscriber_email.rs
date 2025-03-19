@@ -2,7 +2,7 @@
 
 use validator::validate_email;
 #[derive(Debug)]
-pub struct SubscriberEmail(String);
+pub struct SubscriberEmail(pub String);
 
 impl SubscriberEmail {
     pub fn parse(s: String) -> Result<SubscriberEmail, String> {
